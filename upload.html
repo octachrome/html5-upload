@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script>
+    $(function () {
+        function support(objname) {
+            var label = window[objname] ? 'Yes' : 'No';
+            var tr = $('<tr><td>Support for ' + objname + ':</td><td>' + label + '</td></tr>');
+            $('#support').append(tr);
+        }
+
+        support('File');
+        support('FormData');
+
+        jQuery.event.props.push('dataTransfer');
+
+        $('.upload').on('dragover', function (e) {
+            e.preventDefault();
+        });
+
+        $('#file-upload').on('drop', function (e) {
+            e.preventDefault();
+            var file = e.dataTransfer.files[0];
+            $.ajax({
+                url: 'upload',
+                type: 'POST',
+                data: file,
+                contentType: false,
+                processData: false
+            });
+        });
+
+        $('#files-upload').on('drop', function (e) {
+            e.preventDefault();
+            var files = e.dataTransfer.files;
+            $.ajax({
+                url: 'upload',
+                type: 'POST',
+                data: files,
+                contentType: false,
+                processData: false
+            });
+        });
+
+        $('#formdata-upload').on('drop', function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+            var files = e.dataTransfer.files;
+            for (var i = 0; i < files.length; i++) {
+                formData.append('file', files[i]);
+            }
+            $.ajax({
+                url: 'upload',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            });
+        });
+    });
+    </script>
+    <style>
+    div.upload {
+        padding: 50px;
+        outline: 1px dashed black;
+    }
+    </style>
+</head>
+<body>
+    <table id="support"></table>
+    <br/>
+    <div id="file-upload" class="upload">Drop files here to send the contents of the first file as a text/plain post body (Chrome)</div>
+    <br/>
+    <div id="files-upload" class="upload">Drop files here to send FileList.toString - useless (Chrome)</div>
+    <br/>
+    <div id="formdata-upload" class="upload">Drop files here to send the file contents and filenames nicely as a multipart/form post body (Chrome)</div>
+</body>
+</html>
