@@ -15,34 +15,26 @@
 
         jQuery.event.props.push('dataTransfer');
 
+        // The default behaviour of these events must be suppressed to avoid the browser navigating away on drop.
         $('.upload').on('dragover', function (e) {
             e.preventDefault();
         });
 
+        // This one must be suppressed for IE.
+        $('.upload').on('dragenter', function (e) {
+            e.preventDefault();
+        });
+
         $('#file-upload').on('drop', function (e) {
+            // Suppress the default event.
             e.preventDefault();
             var file = e.dataTransfer.files[0];
             $.ajax({
                 url: 'upload',
                 type: 'POST',
                 data: file,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    $('.data').text(data);
-                }
-            });
-        });
-
-        $('#files-upload').on('drop', function (e) {
-            e.preventDefault();
-            var files = e.dataTransfer.files;
-            $.ajax({
-                url: 'upload',
-                type: 'POST',
-                data: files,
-                contentType: false,
-                processData: false,
+                contentType: false, // Prevent jQuery from overriding the browser's choice of content type.
+                processData: false, // Prevent jQuery from attempting to translate the file into query parameters.
                 success: function (data) {
                     $('.data').text(data);
                 }
@@ -83,17 +75,14 @@
 <body>
     <table id="support"></table>
     <br/>
-    Behaviours tested in Chrome 42 and Firefox 28.
-    <br/>
+    Behaviours tested in Chrome 42, Firefox 28 and IE11.<br/>
+    IE9 has no support for the File or FormData objects.<br/>
     <br/>
     <div id="file-upload" class="upload">Drop files here to send the contents of the first file as a text/plain post body</div>
     <br/>
-    <div id="files-upload" class="upload">Drop files here to send FileList.toString - useless</div>
+    <div id="formdata-upload" class="upload">Drop files here to send the file contents and filenames as a multipart/form post body</div>
     <br/>
-    <div id="formdata-upload" class="upload">Drop files here to send the file contents and filenames nicely as a multipart/form post body</div>
-    <br/>
-    Received POST body:
-    <br/>
+    Received POST body:<br/>
     <br/>
     <div class="data"></div>
 </body>
