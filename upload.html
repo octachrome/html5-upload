@@ -27,7 +27,10 @@
                 type: 'POST',
                 data: file,
                 contentType: false,
-                processData: false
+                processData: false,
+                success: function (data) {
+                    $('.data').text(data);
+                }
             });
         });
 
@@ -39,7 +42,10 @@
                 type: 'POST',
                 data: files,
                 contentType: false,
-                processData: false
+                processData: false,
+                success: function (data) {
+                    $('.data').text(data);
+                }
             });
         });
 
@@ -55,7 +61,10 @@
                 type: 'POST',
                 data: formData,
                 contentType: false,
-                processData: false
+                processData: false,
+                success: function (data) {
+                    $('.data').text(data);
+                }
             });
         });
     });
@@ -65,15 +74,27 @@
         padding: 50px;
         outline: 1px dashed black;
     }
+    div.data {
+        padding: 10px;
+        outline: 1px solid black;
+    }
     </style>
 </head>
 <body>
     <table id="support"></table>
     <br/>
-    <div id="file-upload" class="upload">Drop files here to send the contents of the first file as a text/plain post body (Chrome)</div>
+    Behaviours tested in Chrome 42 and Firefox 28.
     <br/>
-    <div id="files-upload" class="upload">Drop files here to send FileList.toString - useless (Chrome)</div>
     <br/>
-    <div id="formdata-upload" class="upload">Drop files here to send the file contents and filenames nicely as a multipart/form post body (Chrome)</div>
+    <div id="file-upload" class="upload">Drop files here to send the contents of the first file as a text/plain post body</div>
+    <br/>
+    <div id="files-upload" class="upload">Drop files here to send FileList.toString - useless</div>
+    <br/>
+    <div id="formdata-upload" class="upload">Drop files here to send the file contents and filenames nicely as a multipart/form post body</div>
+    <br/>
+    Received POST body:
+    <br/>
+    <br/>
+    <div class="data"></div>
 </body>
 </html>
